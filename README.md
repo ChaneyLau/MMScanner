@@ -1,12 +1,12 @@
 # MMScanner
 
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/CheeryLau/MMQRCodeScanner/master/LICENSE)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/v/MMQRCodeScanner.svg?style=flat)](https://cocoapods.org/pods/MMQRCodeScanner)&nbsp;
-[![CocoaPods](http://img.shields.io/cocoapods/p/MMQRCodeScanner.svg?style=flat)](https://cocoapods.org/pods/MMQRCodeScanner)&nbsp;
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/CheeryLau/MMScanner/master/LICENSE)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/v/MMScanner.svg?style=flat)](https://cocoapods.org/pods/MMScanner)&nbsp;
+[![CocoaPods](http://img.shields.io/cocoapods/p/MMScanner.svg?style=flat)](https://cocoapods.org/pods/MMScanner)&nbsp;
 
 iOS源生二维码扫描和制作工具，轻量级UI，UI也可根据属性自行修改。支持条形码扫描以及识别图片中的二维码，制作二维码可以指定颜色、大小、可嵌入logo。
 
-![MMQRCodeScanner](Screenshot.gif)
+![MMScanner](Screenshot.gif)
 
 ## 使用 
 
