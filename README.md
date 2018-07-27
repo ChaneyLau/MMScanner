@@ -105,7 +105,7 @@ UIImage *qrImage = [MMCodeMaker qrImageWithContent:qrContent
                                            qrWidth:240];
 ```
 
-## END
+## 后记
 
 不定时更新，如有问题欢迎给我[留言](https://github.com/CheeryLau/MMScanner/issues)，我会及时回复。如果这个工具对你有一些帮助，请给我一个star，谢谢。
 
