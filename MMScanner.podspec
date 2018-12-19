@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "MMScanner"
-  s.version          = "1.0"
+  s.version          = "1.1"
   s.summary          = "A two-dimensional code scanning and making tools used on iOS."
   s.homepage         = "https://github.com/CheeryLau/MMScanner"
   s.license          = 'MIT'

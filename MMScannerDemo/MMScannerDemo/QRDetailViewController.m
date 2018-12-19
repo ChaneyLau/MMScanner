@@ -11,8 +11,8 @@
 
 @interface QRDetailViewController ()
 
-@property(nonatomic,strong) UIImageView *qrImageView;
-@property(nonatomic, copy) NSString *qrContent;
+@property(nonatomic, strong) UIImageView * qrImageView;
+@property(nonatomic, copy) NSString * qrContent;
 
 @end
 
@@ -21,14 +21,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"结果";
+    self.title = @"二维码";
     self.view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
     
     self.qrContent = @"Hello, this is a two-dimensional code";
     self.qrImageView.image = [MMCodeMaker qrImageWithContent:self.qrContent logoImage:[UIImage imageNamed:@"logo.jpg"] qrColor:[UIColor blackColor] qrWidth:300];
     [self.view addSubview:self.qrImageView];
 
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, self.view.bounds.size.height-300)];
+    UIView * contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 300, self.view.bounds.size.width, self.view.bounds.size.height-300)];
     contentView.backgroundColor = [UIColor whiteColor];
     contentView.layer.borderColor = [[[UIColor lightGrayColor] colorWithAlphaComponent:0.7] CGColor];
     contentView.layer.borderWidth = 1.0;
@@ -53,7 +53,7 @@
     [contentView addSubview:contentLab];
 }
 
-#pragma mark - GETTER
+#pragma mark - lazy load
 - (UIImageView *)qrImageView
 {
     if (!_qrImageView) {

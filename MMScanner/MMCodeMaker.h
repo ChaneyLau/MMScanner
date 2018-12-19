@@ -11,6 +11,17 @@
 
 @interface MMCodeMaker : NSObject
 
+
+/**
+ 生成条形码
+
+ @param content 内容
+ @param imageSize 图片大小
+ @return 图片
+ */
++ (UIImage *)barCodeImageWithContent:(NSString *)content
+                                size:(CGSize)imageSize;
+
 /**
  生成二维码[同步]
  
@@ -20,7 +31,10 @@
  @param qrWidth 二维码宽度
  @return 二维码
  */
-+ (UIImage *)qrImageWithContent:(NSString *)qrContent logoImage:(UIImage *)logoImage qrColor:(UIColor *)qrColor qrWidth:(CGFloat)qrWidth;
++ (UIImage *)qrImageWithContent:(NSString *)qrContent
+                      logoImage:(UIImage *)logoImage
+                        qrColor:(UIColor *)qrColor
+                        qrWidth:(CGFloat)qrWidth;
 
 /**
  生成二维码[异步]
@@ -31,6 +45,10 @@
  @param qrWidth 二维码宽度
  @param completion 完成回调
  */
-+ (void)qrImageWithContent:(NSString *)qrContent logoImage:(UIImage *)logoImage qrColor:(UIColor *)qrColor qrWidth:(CGFloat)qrWidth completion:(void (^)(UIImage *image))completion;
++ (void)qrImageWithContent:(NSString *)qrContent
+                 logoImage:(UIImage *)logoImage
+                   qrColor:(UIColor *)qrColor
+                   qrWidth:(CGFloat)qrWidth
+                completion:(void (^)(UIImage * image))completion;
 
 @end

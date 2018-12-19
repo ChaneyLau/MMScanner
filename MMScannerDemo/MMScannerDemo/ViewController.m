@@ -8,12 +8,13 @@
 
 #import "ViewController.h"
 #import "QRDetailViewController.h"
+#import "BarDetailViewController.h"
 #import "MMScannerController.h"
 
-@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) MMScannerController *scanner;
+@property (nonatomic, strong) UITableView * tableView;
+@property (nonatomic, strong) MMScannerController * scanner;
 @end
 
 @implementation ViewController
@@ -42,7 +43,7 @@
     return _tableView;
 }
 
-#pragma mark - tableView dataSource/delegate
+#pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -50,7 +51,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -60,19 +61,22 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.backgroundColor = [UIColor whiteColor];
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"扫描【支持条码扫描】";
+        cell.textLabel.text = @"扫描二维码/条形码";
+    } else if (indexPath.row == 1) {
+        cell.textLabel.text = @"制作二维码（可内嵌logo）";
     } else {
-        cell.textLabel.text = @"制作【可内嵌logo】";
+        cell.textLabel.text = @"制作条形码";
     }
     return cell;
 }
 
+#pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 0)
     {
         __weak typeof(self) weakSelf = self;
@@ -81,19 +85,21 @@
         _scanner.showFlashlight = YES;
         _scanner.supportBarcode = YES;
         [_scanner setCompletion:^(NSString *scanConetent) {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"扫描内容如下："
-                                                                message:scanConetent
-                                                               delegate:weakSelf
-                                                      cancelButtonTitle:@"确定"
-                                                      otherButtonTitles:nil, nil];
-            [alertView show];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"扫描内容如下："
+                                                             message:scanConetent
+                                                            delegate:weakSelf
+                                                   cancelButtonTitle:@"确定"
+                                                   otherButtonTitles:nil, nil];
+            [alert show];
         }];
         [self.navigationController pushViewController:_scanner animated:YES];
+    } else if (indexPath.row == 1) {
+        QRDetailViewController * controller = [[QRDetailViewController alloc] init];
+        [self.navigationController pushViewController:controller animated:YES];
     } else {
-        QRDetailViewController *VC = [[QRDetailViewController alloc] init];
-        [self.navigationController pushViewController:VC animated:YES];
+        BarDetailViewController * controller = [[BarDetailViewController alloc] init];
+        [self.navigationController pushViewController:controller animated:YES];
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - UIAlertViewDelegate

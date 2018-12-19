@@ -10,5 +10,4 @@
 
 @interface QRDetailViewController : UIViewController
 
-
 @end

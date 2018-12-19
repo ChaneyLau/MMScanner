@@ -18,8 +18,12 @@
 		8B7B124A1FC6C3E300011FE8 /* MMScannerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B12451FC6C3E300011FE8 /* MMScannerController.m */; };
 		8B7B124B1FC6C3E300011FE8 /* MMScannerLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B12471FC6C3E300011FE8 /* MMScannerLayer.m */; };
 		8B7B124E1FC6C43B00011FE8 /* QRDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B124D1FC6C43B00011FE8 /* QRDetailViewController.m */; };
-		8B7B12511FC6C45F00011FE8 /* navigationBar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B7B124F1FC6C45F00011FE8 /* navigationBar@2x.png */; };
 		8B7B12521FC6C45F00011FE8 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B7B12501FC6C45F00011FE8 /* logo.jpg */; };
+		FAC265BB21CA2B6800868D7A /* Screenshot.gif in Resources */ = {isa = PBXBuildFile; fileRef = FAC265B721CA2B6700868D7A /* Screenshot.gif */; };
+		FAC265BC21CA2B6800868D7A /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = FAC265B821CA2B6800868D7A /* LICENSE */; };
+		FAC265BD21CA2B6800868D7A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FAC265B921CA2B6800868D7A /* README.md */; };
+		FAC265BE21CA2B6800868D7A /* MMScanner.podspec in Resources */ = {isa = PBXBuildFile; fileRef = FAC265BA21CA2B6800868D7A /* MMScanner.podspec */; };
+		FAC265C121CA311900868D7A /* BarDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC265C021CA311900868D7A /* BarDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +46,13 @@
 		8B7B12471FC6C3E300011FE8 /* MMScannerLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScannerLayer.m; sourceTree = "<group>"; };
 		8B7B124C1FC6C43B00011FE8 /* QRDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRDetailViewController.h; sourceTree = "<group>"; };
 		8B7B124D1FC6C43B00011FE8 /* QRDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRDetailViewController.m; sourceTree = "<group>"; };
-		8B7B124F1FC6C45F00011FE8 /* navigationBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationBar@2x.png"; sourceTree = "<group>"; };
 		8B7B12501FC6C45F00011FE8 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
+		FAC265B721CA2B6700868D7A /* Screenshot.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = Screenshot.gif; path = ../Screenshot.gif; sourceTree = "<group>"; };
+		FAC265B821CA2B6800868D7A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		FAC265B921CA2B6800868D7A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		FAC265BA21CA2B6800868D7A /* MMScanner.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MMScanner.podspec; path = ../MMScanner.podspec; sourceTree = "<group>"; };
+		FAC265BF21CA311900868D7A /* BarDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BarDetailViewController.h; sourceTree = "<group>"; };
+		FAC265C021CA311900868D7A /* BarDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BarDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +92,8 @@
 				8B7B12301FC6C3C500011FE8 /* ViewController.m */,
 				8B7B124C1FC6C43B00011FE8 /* QRDetailViewController.h */,
 				8B7B124D1FC6C43B00011FE8 /* QRDetailViewController.m */,
+				FAC265BF21CA311900868D7A /* BarDetailViewController.h */,
+				FAC265C021CA311900868D7A /* BarDetailViewController.m */,
 				8B7B12291FC6C3C500011FE8 /* Supporting Files */,
 			);
 			path = MMScannerDemo;
@@ -91,7 +102,6 @@
 		8B7B12291FC6C3C500011FE8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				8B7B124F1FC6C45F00011FE8 /* navigationBar@2x.png */,
 				8B7B12501FC6C45F00011FE8 /* logo.jpg */,
 				8B7B12321FC6C3C500011FE8 /* Main.storyboard */,
 				8B7B12351FC6C3C500011FE8 /* Assets.xcassets */,
@@ -105,6 +115,7 @@
 		8B7B12401FC6C3E300011FE8 /* MMScanner */ = {
 			isa = PBXGroup;
 			children = (
+				FAC265B621CA2B5B00868D7A /* Pod */,
 				8B7B12431FC6C3E300011FE8 /* MMScanner.bundle */,
 				8B7B12441FC6C3E300011FE8 /* MMScannerController.h */,
 				8B7B12451FC6C3E300011FE8 /* MMScannerController.m */,
@@ -115,6 +126,17 @@
 			);
 			name = MMScanner;
 			path = ../../MMScanner;
+			sourceTree = "<group>";
+		};
+		FAC265B621CA2B5B00868D7A /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				FAC265BA21CA2B6800868D7A /* MMScanner.podspec */,
+				FAC265B921CA2B6800868D7A /* README.md */,
+				FAC265B821CA2B6800868D7A /* LICENSE */,
+				FAC265B721CA2B6700868D7A /* Screenshot.gif */,
+			);
+			name = Pod;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,9 +200,12 @@
 			files = (
 				8B7B12491FC6C3E300011FE8 /* MMScanner.bundle in Resources */,
 				8B7B12391FC6C3C500011FE8 /* LaunchScreen.storyboard in Resources */,
-				8B7B12511FC6C45F00011FE8 /* navigationBar@2x.png in Resources */,
 				8B7B12361FC6C3C500011FE8 /* Assets.xcassets in Resources */,
+				FAC265BC21CA2B6800868D7A /* LICENSE in Resources */,
+				FAC265BE21CA2B6800868D7A /* MMScanner.podspec in Resources */,
 				8B7B12521FC6C45F00011FE8 /* logo.jpg in Resources */,
+				FAC265BB21CA2B6800868D7A /* Screenshot.gif in Resources */,
+				FAC265BD21CA2B6800868D7A /* README.md in Resources */,
 				8B7B12341FC6C3C500011FE8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -195,6 +220,7 @@
 				8B7B12311FC6C3C500011FE8 /* ViewController.m in Sources */,
 				8B7B12481FC6C3E300011FE8 /* MMCodeMaker.m in Sources */,
 				8B7B124B1FC6C3E300011FE8 /* MMScannerLayer.m in Sources */,
+				FAC265C121CA311900868D7A /* BarDetailViewController.m in Sources */,
 				8B7B122E1FC6C3C500011FE8 /* AppDelegate.m in Sources */,
 				8B7B124A1FC6C3E300011FE8 /* MMScannerController.m in Sources */,
 				8B7B122B1FC6C3C500011FE8 /* main.m in Sources */,
@@ -357,6 +383,7 @@
 				8B7B123F1FC6C3C500011FE8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

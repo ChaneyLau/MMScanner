@@ -11,9 +11,9 @@
 @interface MMScannerLayer ()
 
 // 定时器
-@property (nonatomic, strong) NSTimer *scanTimer;
+@property (nonatomic, strong) NSTimer * scanTimer;
 // 扫描线
-@property (nonatomic, strong) UIImageView *qrScanLine;
+@property (nonatomic, strong) UIImageView * qrScanLine;
 // 扫描线竖向偏移量
 @property (nonatomic, assign) CGFloat qrScanLineOffY;
 
@@ -41,7 +41,7 @@
     [super layoutSubviews];
     
     if (!_qrScanLine) {
-        UIImage *image = [UIImage imageNamed:[@"MMScanner.bundle" stringByAppendingPathComponent:_qrScanLineImageName]];
+        UIImage * image = [UIImage imageNamed:[@"MMScanner.bundle" stringByAppendingPathComponent:_qrScanLineImageName]];
         _qrScanLine  = [[UIImageView alloc] initWithFrame:CGRectMake(_qrScanArea.origin.x,_qrScanArea.origin.y, _qrScanArea.size.width, image.size.height)];
         _qrScanLine.image = image;
         _qrScanLine.contentMode = UIViewContentModeScaleAspectFit;
@@ -115,10 +115,10 @@
 
 - (void)addCornerLineWithContext:(CGContextRef)ctx rect:(CGRect)rect
 {
-    //边角的长度
+    // 边角的长度
     CGFloat margin = 20;
     
-    //获取颜色RGB值
+    // 获取颜色RGB值
     CGFloat red = 0.0;
     CGFloat green = 0.0;
     CGFloat blue = 0.0;
@@ -128,22 +128,22 @@
     CGContextSetLineWidth(ctx, 2);
     CGContextSetRGBStrokeColor(ctx, red, green, blue, 1.0);
     
-    //左上角
+    // 左上角
     CGPoint poinsTopLeftA[] = {
         CGPointMake(rect.origin.x, rect.origin.y),
         CGPointMake(rect.origin.x, rect.origin.y + margin)
     };
     CGPoint poinsTopLeftB[] = {CGPointMake(rect.origin.x, rect.origin.y),CGPointMake(rect.origin.x + margin, rect.origin.y)};
     [self addLine:poinsTopLeftA pointB:poinsTopLeftB ctx:ctx];
-    //左下角
+    // 左下角
     CGPoint poinsBottomLeftA[] = {CGPointMake(rect.origin.x, rect.origin.y + rect.size.height - margin),CGPointMake(rect.origin.x,rect.origin.y + rect.size.height)};
     CGPoint poinsBottomLeftB[] = {CGPointMake(rect.origin.x , rect.origin.y + rect.size.height) ,CGPointMake(rect.origin.x + margin, rect.origin.y + rect.size.height)};
     [self addLine:poinsBottomLeftA pointB:poinsBottomLeftB ctx:ctx];
-    //右上角
+    // 右上角
     CGPoint poinsTopRightA[] = {CGPointMake(rect.origin.x + rect.size.width - margin, rect.origin.y),CGPointMake(rect.origin.x + rect.size.width,rect.origin.y )};
     CGPoint poinsTopRightB[] = {CGPointMake(rect.origin.x + rect.size.width, rect.origin.y),CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + margin)};
     [self addLine:poinsTopRightA pointB:poinsTopRightB ctx:ctx];
-    //右下角
+    // 右下角
     CGPoint poinsBottomRightA[] = {CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height+ - margin),CGPointMake(rect.origin.x + rect.size.width,rect.origin.y +rect.size.height)};
     CGPoint poinsBottomRightB[] = {CGPointMake(rect.origin.x + rect.size.width - margin , rect.origin.y + rect.size.height),CGPointMake(rect.origin.x + rect.size.width,rect.origin.y + rect.size.height)};
     [self addLine:poinsBottomRightA pointB:poinsBottomRightB ctx:ctx];

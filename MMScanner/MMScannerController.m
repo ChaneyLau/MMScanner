@@ -9,17 +9,18 @@
 #import "MMScannerController.h"
 #import "MMScannerLayer.h"
 #import <AVFoundation/AVFoundation.h>
+#import <Photos/Photos.h>
 
-@interface MMScannerController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface MMScannerController () <AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
-@property (nonatomic, strong) MMScannerLayer *scannerLayer;
-@property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, strong) AVCaptureDevice *inputDevice;
-@property (nonatomic, strong) UIActivityIndicatorView *spinner;
-@property (nonatomic, strong) UIView *warnView;
-@property (nonatomic, strong) UILabel *warnLab;
-@property (nonatomic, strong) UILabel *noteLab;
-@property (nonatomic, strong) UIView *flashlightView;
+@property (nonatomic, strong) MMScannerLayer * scannerLayer;
+@property (nonatomic, strong) AVCaptureSession * session;
+@property (nonatomic, strong) AVCaptureDevice * inputDevice;
+@property (nonatomic, strong) UIActivityIndicatorView * spinner;
+@property (nonatomic, strong) UIView * warnView;
+@property (nonatomic, strong) UILabel * warnLab;
+@property (nonatomic, strong) UILabel * noteLab;
+@property (nonatomic, strong) UIView * flashlightView;
 
 @end
 
@@ -40,7 +41,7 @@
     return self;
 }
 
-#pragma mark - 生命周期
+#pragma mark - life cycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -89,17 +90,38 @@
     if (self.showGalleryOption) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"图库" style:UIBarButtonItemStylePlain target:self action:@selector(galleryClicked)];
     }
+    // 相机权限
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (status == AVAuthorizationStatusNotDetermined) { // 首次访问
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            if (!granted) { // 未授权 > 返回
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                });
+            }
+        }];
+    } else {
+        if (status == AVAuthorizationStatusRestricted ||
+            status == AVAuthorizationStatusDenied) {
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在设置>隐私>相机中开启权限" preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }]];
+            [self presentViewController:alert animated:YES completion:nil];
+            return;
+        }
+    }
     //## 设置采集
     // 获取摄像设备、输入输出流
-    NSError *err = nil;
-    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:self.inputDevice error:&err];
+    NSError * err = nil;
+    AVCaptureDeviceInput * input = [AVCaptureDeviceInput deviceInputWithDevice:self.inputDevice error:&err];
     if (!input) {
         return;
     }
-    AVCaptureMetadataOutput *output = [[AVCaptureMetadataOutput alloc]init];
+    AVCaptureMetadataOutput * output = [[AVCaptureMetadataOutput alloc]init];
     [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     //  持续自动曝光
-    NSError *error = nil;
+    NSError * error = nil;
     if ([self.inputDevice lockForConfiguration:&error]) {
         [self.inputDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
         [self.inputDevice setTorchMode:AVCaptureTorchModeAuto];
@@ -111,9 +133,16 @@
     // 是否支持条形码
     if (self.supportBarcode) {
         output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode,
-                                       AVMetadataObjectTypeEAN13Code,
+                                       // 条形码（添加越多扫描越慢
                                        AVMetadataObjectTypeEAN8Code,
-                                       AVMetadataObjectTypeCode128Code];
+                                       AVMetadataObjectTypeEAN13Code,
+                                       AVMetadataObjectTypeUPCECode,
+                                       AVMetadataObjectTypeCode39Code,
+                                       AVMetadataObjectTypeCode128Code,
+                                       AVMetadataObjectTypeCode39Mod43Code,
+                                       AVMetadataObjectTypeCode93Code,
+                                       AVMetadataObjectTypePDF417Code,
+                                       AVMetadataObjectTypeInterleaved2of5Code];
     } else {
         output.metadataObjectTypes = @[AVMetadataObjectTypeQRCode];
     }
@@ -142,7 +171,106 @@
     self.warnView.hidden = YES;
 }
 
-#pragma mark - 懒加载
+#pragma mark - 手电筒
+- (void)flashClicked
+{
+    if (self.inputDevice.torchMode == AVCaptureTorchModeOn) {
+        [self.inputDevice lockForConfiguration:nil];
+        [self.inputDevice setTorchMode:AVCaptureTorchModeOff];
+        [self.inputDevice unlockForConfiguration];
+    } else {
+        [self.inputDevice lockForConfiguration:nil];
+        [self.inputDevice setTorchMode:AVCaptureTorchModeOn];
+        [self.inputDevice unlockForConfiguration];
+    }
+}
+
+#pragma mark - 继续扫描
+- (void)gestureResponse
+{
+    self.warnView.hidden = YES;
+}
+
+#pragma mark - 图库选择
+- (void)galleryClicked
+{
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    if (status == AVAuthorizationStatusNotDetermined) { // 首次访问
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            if (status == PHAuthorizationStatusAuthorized)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.delegate = self;
+                    imagePicker.navigationBar.tintColor = [UIColor blackColor];
+                    [self presentViewController:imagePicker animated:YES completion:nil];
+                });
+            }
+        }];
+    } else {
+        if (status == AVAuthorizationStatusRestricted ||
+            status == AVAuthorizationStatusDenied) {
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在设置>隐私>照片中开启权限" preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }]];
+            [self presentViewController:alert animated:YES completion:nil];
+        } else {
+            UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+            imagePicker.delegate = self;
+            imagePicker.navigationBar.tintColor = [UIColor blackColor];
+            [self presentViewController:imagePicker animated:YES completion:nil];
+        }
+    }
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    // 获取图片
+    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    // 初始化扫描仪，设置设别类型和识别质量
+    CIDetector * detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy:CIDetectorAccuracyHigh}];
+    // 扫描获取的特征组
+    NSArray * features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
+    // 获取扫描结果
+    if ([features count]) {
+        self.warnView.hidden = YES;
+        CIQRCodeFeature *feature = [features objectAtIndex:0];
+        NSString *scanConetent = feature.messageString;
+        // 回传
+        if (self.completion) self.completion(scanConetent);
+    } else {
+        self.warnView.hidden = NO;
+    }
+    //  dismiss图库
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - AVCaptureMetadataOutputObjectsDelegate
+-(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+{
+    if (metadataObjects.count > 0)
+    {
+        self.warnView.hidden = YES;
+        // 获取扫描结果
+        AVMetadataMachineReadableCodeObject *metadataObject = [metadataObjects objectAtIndex:0];
+        NSString * scanConetent = metadataObject.stringValue;
+        // 回传
+        if (self.completion) {
+            self.completion(scanConetent);
+        }
+        // 停止扫描
+        [self.session stopRunning];
+    }
+}
+
+#pragma mark - lazy load
 - (MMScannerLayer *)scannerLayer
 {
     if (!_scannerLayer) {
@@ -211,7 +339,7 @@
             warnStr = @"未发现二维码/条形码\n轻触屏幕继续";
         }
         
-        //设置行距
+        // 设置行距
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:warnStr];
         NSMutableParagraphStyle *stype = [[NSMutableParagraphStyle alloc] init];
         stype.lineSpacing = 3;
@@ -242,12 +370,12 @@
         _flashlightView = [[UIView alloc] initWithFrame:CGRectMake(0, self.noteLab.frame.origin.y + self.noteLab.frame.size.height + 10, self.view.bounds.size.width, 80)];
         _flashlightView.backgroundColor = [UIColor clearColor];
         
-        UIButton *flashBtn = [[UIButton alloc] initWithFrame:CGRectMake((_flashlightView.bounds.size.width-60)/2, 0, 60, 60)];
+        UIButton * flashBtn = [[UIButton alloc] initWithFrame:CGRectMake((_flashlightView.bounds.size.width-60)/2, 0, 60, 60)];
         [flashBtn setImage:[UIImage imageNamed:[@"MMScanner.bundle" stringByAppendingPathComponent:@"scan_flashlight"]] forState:UIControlStateNormal];
         [flashBtn addTarget:self action:@selector(flashClicked) forControlEvents:UIControlEventTouchUpInside];
         [_flashlightView addSubview:flashBtn];
         
-        UILabel *noteLab = [[UILabel alloc] initWithFrame:CGRectMake(0, flashBtn.frame.origin.y + flashBtn.frame.size.height - 10, _flashlightView.bounds.size.width, 20)];
+        UILabel * noteLab = [[UILabel alloc] initWithFrame:CGRectMake(0, flashBtn.frame.origin.y + flashBtn.frame.size.height - 10, _flashlightView.bounds.size.width, 20)];
         noteLab.textColor = [UIColor whiteColor];
         noteLab.text = @"轻触照亮";
         noteLab.textAlignment = NSTextAlignmentCenter;
@@ -256,81 +384,6 @@
         [_flashlightView addSubview:noteLab];
     }
     return _flashlightView;
-}
-
-#pragma mark - 手电筒
-- (void)flashClicked
-{
-    if (self.inputDevice.torchMode == AVCaptureTorchModeOn) {
-        [self.inputDevice lockForConfiguration:nil];
-        [self.inputDevice setTorchMode:AVCaptureTorchModeOff];
-        [self.inputDevice unlockForConfiguration];
-    } else {
-        [self.inputDevice lockForConfiguration:nil];
-        [self.inputDevice setTorchMode:AVCaptureTorchModeOn];
-        [self.inputDevice unlockForConfiguration];
-    }
-}
-
-#pragma mark - 继续扫描
-- (void)gestureResponse
-{
-    self.warnView.hidden = YES;
-}
-
-#pragma mark - 图库选择
-- (void)galleryClicked
-{
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    imagePicker.navigationBar.tintColor = [UIColor blackColor];
-    [self presentViewController:imagePicker animated:YES completion:nil];
-}
-
-#pragma mark - UIImagePickerControllerDelegate
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    // 获取图片
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    // 初始化扫描仪，设置设别类型和识别质量
-    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{CIDetectorAccuracy:CIDetectorAccuracyHigh}];
-    // 扫描获取的特征组
-    NSArray *features = [detector featuresInImage:[CIImage imageWithCGImage:image.CGImage]];
-    // 获取扫描结果
-    if ([features count]) {
-        self.warnView.hidden = YES;
-        CIQRCodeFeature *feature = [features objectAtIndex:0];
-        NSString *scanConetent = feature.messageString;
-        // 回传
-        if (self.completion) self.completion(scanConetent);
-    } else {
-        self.warnView.hidden = NO;
-    }
-    //  dismiss图库
-    [picker dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [picker dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - AVCaptureMetadataOutputObjectsDelegate
--(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
-    if (metadataObjects.count > 0)
-    {
-        self.warnView.hidden = YES;
-        // 获取扫描结果
-        AVMetadataMachineReadableCodeObject *metadataObject = [metadataObjects objectAtIndex:0];
-        NSString *scanConetent = metadataObject.stringValue;
-        // 回传
-        if (self.completion) {
-            self.completion(scanConetent);
-        }
-        // 停止扫描
-        [self.session stopRunning];
-    }
 }
 
 #pragma mark -
