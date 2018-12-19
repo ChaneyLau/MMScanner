@@ -4,9 +4,9 @@
 [![CocoaPods](http://img.shields.io/cocoapods/v/MMScanner.svg?style=flat)](https://cocoapods.org/pods/MMScanner)&nbsp;
 [![CocoaPods](http://img.shields.io/cocoapods/p/MMScanner.svg?style=flat)](https://cocoapods.org/pods/MMScanner)&nbsp;
 
-iOS源生二维码扫描和制作工具，轻量级UI，UI也可根据属性自行修改。支持条形码扫描以及识别图片中的二维码，制作二维码可以指定颜色、大小、可嵌入logo。
+iOS源生二维码/条形码扫描和制作工具，轻量级UI，UI也可根据属性自行修改。支持条形码扫描以及识别图片中的二维码，制作二维码可以指定颜色、大小、可嵌入logo。
 
-![MMScanner](Screenshot.gif)
+![MMScanner](Screenshot.png)
 
 ## 使用 
 
@@ -27,7 +27,7 @@ iOS源生二维码扫描和制作工具，轻量级UI，UI也可根据属性自�
 // 四角颜色 [默认：白色]
 @property (nonatomic, strong) UIColor *qrScanLayerBorderColor;
 // 扫描线图片 [默认：使用bundle下的scan_line]
-@property (nonatomic, copy) NSString *qrScanLineImageName;
+@property (nonatomic, copy) NSString * qrScanLineImageName;
 // 是否支持条码 [默认显示：NO]
 @property (nonatomic, assign) BOOL supportBarcode;
 // 是否显示'手电筒'[默认显示：NO]
@@ -50,21 +50,26 @@ _scanner.showGalleryOption = YES;
 _scanner.showFlashlight = YES;
 _scanner.supportBarcode = YES;
 [_scanner setCompletion:^(NSString *scanConetent) {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"扫描内容如下："
-                                                        message:scanConetent
-                                                       delegate:weakSelf
-                                              cancelButtonTitle:@"确定"
-                                              otherButtonTitles:nil, nil];
-    [alertView show];
+    NSLog(@"扫描内容：%@",scanConetent);
 }];
 [self.navigationController pushViewController:_scanner animated:YES];
 ```
 
-### 二维码制作
+### 条形码/二维码制作
 
-`MMCodeMaker`提供同步和异步制作方式：
+`MMCodeMaker`提供条形码以及同步/异步二维码制作方法：
 
 ```objc
+/**
+ 生成条形码
+
+ @param content 内容
+ @param imageSize 图片大小
+ @return 图片
+ */
++ (UIImage *)barCodeImageWithContent:(NSString *)content
+                                size:(CGSize)imageSize;
+                                
 /**
 制作二维码[同步]
 
@@ -98,6 +103,11 @@ _scanner.supportBarcode = YES;
 示例如下：
 
 ```objc
+
+// 条形码制作
+UIImage *barImage = [MMCodeMaker barCodeImageWithContent:@"1234567890" size:CGSizeMake(300, 120)];
+
+// 二维码制作
 NSString *qrContent = @"Hello, this is a two-dimensional code";
 UIImage *qrImage = [MMCodeMaker qrImageWithContent:qrContent
                                          logoImage:[UIImage imageNamed:@"logo.jpg"]
