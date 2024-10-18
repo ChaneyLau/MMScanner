@@ -1,12 +1,12 @@
 # MMScanner
 
-[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/CheeryLau/MMScanner/master/LICENSE)&nbsp;
+[![License MIT](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/ChellyLau/MMScanner/master/LICENSE)&nbsp;
 [![CocoaPods](http://img.shields.io/cocoapods/v/MMScanner.svg?style=flat)](https://cocoapods.org/pods/MMScanner)&nbsp;
 [![CocoaPods](http://img.shields.io/cocoapods/p/MMScanner.svg?style=flat)](https://cocoapods.org/pods/MMScanner)&nbsp;
 
-iOS源生二维码/条形码扫描和制作工具，轻量级UI，UI也可根据属性自行修改。支持条形码扫描以及识别图片中的二维码，制作二维码可以指定颜色、大小、可嵌入logo。
+iOS源生二维码/条形码扫描和制作工具，轻量级UI，支持条形码扫描以及识别图片中的二维码，制作二维码可以指定颜色、大小、可嵌入logo等。
 
-![MMScanner](Screenshot.png)
+![MMScanner](Screenshot.jpg)
 
 ## 使用 
 
@@ -15,47 +15,46 @@ iOS源生二维码/条形码扫描和制作工具，轻量级UI，UI也可根据
 3. `#import <MMScannerController.h>`
 4. `info.plist`中添加`Privacy - Camera Usage Description`和`Privacy - Photo Library Usage Description`
 
-## 二维码扫描 
+## 扫描 
 
-`MMScannerController`外部可修改属性如下，使用时可自行设置。
+属性：
 
 ```objc
-// 透明的区域[扫描区 | 默认：左边距40，上边距80]
-@property (nonatomic, assign) CGRect qrScanArea;
-// 动画间隔时间 [默认值:0.01]
-@property (nonatomic, assign) double qrScanLineAnimateDuration;
-// 四角颜色 [默认：白色]
-@property (nonatomic, strong) UIColor *qrScanLayerBorderColor;
-// 扫描线图片 [默认：使用bundle下的scan_line]
-@property (nonatomic, copy) NSString * qrScanLineImageName;
+// 代理
+@property (nonatomic, weak) id<MMScannerDelegate> delegate;
 // 是否支持条码 [默认显示：NO]
 @property (nonatomic, assign) BOOL supportBarcode;
-// 是否显示'手电筒'[默认显示：NO]
-@property (nonatomic, assign) BOOL showFlashlight;
-// 是否显示'图库'[默认显示：NO]
-@property (nonatomic, assign) BOOL showGalleryOption;
-// 扫描内容回传
-@property (nonatomic, copy) void (^completion)(NSString *scanConetent);
 
 // 扫描控制
 - (void)startScan;
 - (void)stopScan;
 ```
+代理：
+
+```objc
+@protocol MMScannerDelegate <NSObject>
+
+@optional
+// 扫描结果返回
+- (void)onScanResultCallback:(NSString *)scanContent;
+// 进入【我的二维码】
+- (void)onScanMineClickCallback;
+// 进入【图库】并回传图片
+- (void)onScanAlbumClickCallback:(void (^)(UIImage *image))callback;
+
+@end
+```
 
 示例如下：
 
 ```objc
-_scanner = [[MMScannerController alloc] init];
-_scanner.showGalleryOption = YES;
-_scanner.showFlashlight = YES;
-_scanner.supportBarcode = YES;
-[_scanner setCompletion:^(NSString *scanConetent) {
-    NSLog(@"扫描内容：%@",scanConetent);
-}];
-[self.navigationController pushViewController:_scanner animated:YES];
+MMScannerController *scanner = [[MMScannerController alloc] init];
+scanner.supportBarcode = YES;
+scanner.delegate = self;
+[self.navigationController pushViewController:scanner animated:YES];
 ```
 
-### 条形码/二维码制作
+## 制作
 
 `MMCodeMaker`提供条形码以及同步/异步二维码制作方法：
 
@@ -103,7 +102,6 @@ _scanner.supportBarcode = YES;
 示例如下：
 
 ```objc
-
 // 条形码制作
 UIImage *barImage = [MMCodeMaker barCodeImageWithContent:@"1234567890" size:CGSizeMake(300, 120)];
 
@@ -114,9 +112,3 @@ UIImage *qrImage = [MMCodeMaker qrImageWithContent:qrContent
                                            qrColor:[UIColor blackColor]
                                            qrWidth:240];
 ```
-
-## 后记
-
-不定时更新，如有问题欢迎给我[留言](https://github.com/CheeryLau/MMScanner/issues)，我会及时回复。如果这个工具对你有一些帮助，请给我一个star，谢谢。
-
-

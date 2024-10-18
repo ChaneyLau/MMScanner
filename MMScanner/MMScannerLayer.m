@@ -11,9 +11,9 @@
 @interface MMScannerLayer ()
 
 // 定时器
-@property (nonatomic, strong) NSTimer * scanTimer;
+@property (nonatomic, strong) NSTimer *scanTimer;
 // 扫描线
-@property (nonatomic, strong) UIImageView * qrScanLine;
+@property (nonatomic, strong) UIImageView *qrScanLine;
 // 扫描线竖向偏移量
 @property (nonatomic, assign) CGFloat qrScanLineOffY;
 
@@ -25,12 +25,10 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        CGFloat width = [UIScreen mainScreen].bounds.size.width - 80;
-        // 初始值
-        _qrScanLineImageName = @"scan_line";
-        _qrScanLineAnimateDuration = 0.01;
-        _qrScanLayerBorderColor =  [UIColor whiteColor];
-        _qrScanArea = CGRectMake(40, 80, width, width);
+        CGFloat margin = 50.0;
+        CGFloat width = [UIScreen mainScreen].bounds.size.width - 2*margin;
+        CGFloat top = ([UIScreen mainScreen].bounds.size.height - width)/2.0;
+        _qrScanArea = CGRectMake(margin, top, width, width);
     }
     return self;
 }
@@ -41,7 +39,7 @@
     [super layoutSubviews];
     
     if (!_qrScanLine) {
-        UIImage * image = [UIImage imageNamed:[@"MMScanner.bundle" stringByAppendingPathComponent:_qrScanLineImageName]];
+        UIImage *image = [UIImage imageNamed:[@"MMScanner.bundle" stringByAppendingPathComponent:@"scan_line"]];
         _qrScanLine  = [[UIImageView alloc] initWithFrame:CGRectMake(_qrScanArea.origin.x,_qrScanArea.origin.y, _qrScanArea.size.width, image.size.height)];
         _qrScanLine.image = image;
         _qrScanLine.contentMode = UIViewContentModeScaleAspectFit;
@@ -53,11 +51,11 @@
 #pragma mark - 动画
 - (void)startAnimation
 {
-    _scanTimer = [NSTimer scheduledTimerWithTimeInterval:_qrScanLineAnimateDuration
-                                                  target:self
-                                                selector:@selector(scanQrCode)
-                                                userInfo:nil
-                                                 repeats:YES];
+    if (_scanTimer) {
+        [_scanTimer invalidate];
+        _scanTimer = nil;
+    }
+    _scanTimer = [NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(scanQrCode) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_scanTimer forMode:NSRunLoopCommonModes];
     [_scanTimer fire];
 }
@@ -65,12 +63,13 @@
 - (void)stopAnimation
 {
     [_scanTimer invalidate];
+    _scanTimer = nil;
 }
 
 #pragma mark - 扫描
 - (void)scanQrCode
 {
-    [UIView animateWithDuration:_qrScanLineAnimateDuration animations:^{
+    [UIView animateWithDuration:0.01 animations:^{
         CGRect rect = _qrScanLine.frame;
         rect.origin.y = _qrScanLineOffY;
         _qrScanLine.frame = rect;
@@ -89,13 +88,14 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     [self addScreenFillRect:ctx rect:self.frame];
     [self addCenterClearRect:ctx rect:_qrScanArea];
-    [self addWhiteRect:ctx rect:_qrScanArea];
-    [self addCornerLineWithContext:ctx rect:_qrScanArea];
+    //[self addWhiteRect:ctx rect:_qrScanArea];
+    //[self addCornerLineWithContext:ctx rect:_qrScanArea];
+    [self addEdgeCorner:_qrScanArea];
 }
 
 - (void)addScreenFillRect:(CGContextRef)ctx rect:(CGRect)rect
 {
-    CGContextSetRGBFillColor(ctx, 0/255.0, 0/255.0, 0/255.0, 0.7);
+    CGContextSetRGBFillColor(ctx, 0/255.0, 0/255.0, 0/255.0, 0.4);
     CGContextFillRect(ctx, rect);
 }
 
@@ -123,7 +123,7 @@
     CGFloat green = 0.0;
     CGFloat blue = 0.0;
     CGFloat alpha = 0.0;
-    [_qrScanLayerBorderColor getRed:&red green:&green blue:&blue alpha:&alpha];
+    [[UIColor whiteColor] getRed:&red green:&green blue:&blue alpha:&alpha];
     
     CGContextSetLineWidth(ctx, 2);
     CGContextSetRGBStrokeColor(ctx, red, green, blue, 1.0);
@@ -154,6 +154,54 @@
 {
     CGContextAddLines(ctx, pointA, 2);
     CGContextAddLines(ctx, pointB, 2);
+}
+
+- (void)addEdgeCorner:(CGRect)rect
+{
+    UIImage *image = [UIImage imageNamed:[@"MMScanner.bundle" stringByAppendingPathComponent:@"scan_corner"]];
+    UIImageView *iv;
+    CGRect ivRect;
+    // 左上
+    ivRect = CGRectMake(rect.origin.x-1.5, rect.origin.y-1.5, 20, 20);
+    iv = [UIImageView new];
+    iv.frame = ivRect;
+    iv.image = image;
+    [self addSubview:iv];
+    // 左下
+    ivRect = CGRectMake(rect.origin.x-1.5, rect.origin.y+1.5+rect.size.height-20, 20, 20);
+    iv = [UIImageView new];
+    iv.frame = ivRect;
+    iv.image = [self rotateImage:image degrees:0];;
+    [self addSubview:iv];
+    // 右上
+    ivRect = CGRectMake(rect.origin.x+1.5+rect.size.width-20, rect.origin.y-1.5, 20, 20);
+    iv = [UIImageView new];
+    iv.frame = ivRect;
+    iv.image = [self rotateImage:image degrees:180];;
+    [self addSubview:iv];
+    // 右下
+    ivRect = CGRectMake(rect.origin.x+1.5+rect.size.width-20, rect.origin.y+1.5+rect.size.height-20, 20, 20);
+    iv = [UIImageView new];
+    iv.frame = ivRect;
+    iv.image = [self rotateImage:image degrees:270];;
+    [self addSubview:iv];
+}
+
+- (UIImage *)rotateImage:(UIImage *)image degrees:(CGFloat)degrees
+{
+    CGSize size = image.size;
+    CGFloat rotatedWidth = fabs(size.width * cos(degrees * M_PI / 180.0)) + fabs(size.height * sin(degrees * M_PI / 180.0));
+    CGFloat rotatedHeight = fabs(size.width * sin(degrees * M_PI / 180.0)) + fabs(size.height * cos(degrees * M_PI / 180.0));
+
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(rotatedWidth, rotatedHeight), NO, 0.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, rotatedWidth / 2, rotatedHeight / 2);
+    CGContextRotateCTM(context, degrees * M_PI / 180.0);
+    CGRect rect = CGRectMake(-size.width / 2, -size.height / 2, size.width, size.height);
+    CGContextDrawImage(context, rect, image.CGImage);
+    UIImage *rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return rotatedImage;
 }
 
 @end

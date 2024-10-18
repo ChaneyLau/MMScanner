@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22A0B99A2CBF6071005E0161 /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 22A0B9992CBF6071005E0161 /* UIImage+Color.m */; };
+		22FD25982CC1F611009C96FA /* Screenshot.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 22FD25972CC1F611009C96FA /* Screenshot.jpg */; };
 		8B7B122B1FC6C3C500011FE8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B122A1FC6C3C500011FE8 /* main.m */; };
 		8B7B122E1FC6C3C500011FE8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B122D1FC6C3C500011FE8 /* AppDelegate.m */; };
 		8B7B12311FC6C3C500011FE8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B12301FC6C3C500011FE8 /* ViewController.m */; };
@@ -19,14 +21,16 @@
 		8B7B124B1FC6C3E300011FE8 /* MMScannerLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B12471FC6C3E300011FE8 /* MMScannerLayer.m */; };
 		8B7B124E1FC6C43B00011FE8 /* QRDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B7B124D1FC6C43B00011FE8 /* QRDetailViewController.m */; };
 		8B7B12521FC6C45F00011FE8 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8B7B12501FC6C45F00011FE8 /* logo.jpg */; };
-		FAC265BB21CA2B6800868D7A /* Screenshot.gif in Resources */ = {isa = PBXBuildFile; fileRef = FAC265B721CA2B6700868D7A /* Screenshot.gif */; };
-		FAC265BC21CA2B6800868D7A /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = FAC265B821CA2B6800868D7A /* LICENSE */; };
-		FAC265BD21CA2B6800868D7A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FAC265B921CA2B6800868D7A /* README.md */; };
-		FAC265BE21CA2B6800868D7A /* MMScanner.podspec in Resources */ = {isa = PBXBuildFile; fileRef = FAC265BA21CA2B6800868D7A /* MMScanner.podspec */; };
 		FAC265C121CA311900868D7A /* BarDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC265C021CA311900868D7A /* BarDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22A0B9982CBF6071005E0161 /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Color.h"; path = "MMScannerDemo/UIImage+Color.h"; sourceTree = SOURCE_ROOT; };
+		22A0B9992CBF6071005E0161 /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Color.m"; path = "MMScannerDemo/UIImage+Color.m"; sourceTree = SOURCE_ROOT; };
+		22A0B99C2CBF60A4005E0161 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		22A0B99D2CBF60A4005E0161 /* MMScanner.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = MMScanner.podspec; path = ../../MMScanner.podspec; sourceTree = "<group>"; };
+		22A0B99E2CBF60A4005E0161 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; name = LICENSE; path = ../../LICENSE; sourceTree = "<group>"; };
+		22FD25972CC1F611009C96FA /* Screenshot.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Screenshot.jpg; path = ../../Screenshot.jpg; sourceTree = "<group>"; };
 		8B7B12261FC6C3C500011FE8 /* MMScannerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMScannerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B7B122A1FC6C3C500011FE8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8B7B122C1FC6C3C500011FE8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -47,10 +51,6 @@
 		8B7B124C1FC6C43B00011FE8 /* QRDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRDetailViewController.h; sourceTree = "<group>"; };
 		8B7B124D1FC6C43B00011FE8 /* QRDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRDetailViewController.m; sourceTree = "<group>"; };
 		8B7B12501FC6C45F00011FE8 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
-		FAC265B721CA2B6700868D7A /* Screenshot.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = Screenshot.gif; path = ../Screenshot.gif; sourceTree = "<group>"; };
-		FAC265B821CA2B6800868D7A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		FAC265B921CA2B6800868D7A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		FAC265BA21CA2B6800868D7A /* MMScanner.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MMScanner.podspec; path = ../MMScanner.podspec; sourceTree = "<group>"; };
 		FAC265BF21CA311900868D7A /* BarDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BarDetailViewController.h; sourceTree = "<group>"; };
 		FAC265C021CA311900868D7A /* BarDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BarDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,6 +66,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22A0B99B2CBF6085005E0161 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				22A0B99E2CBF60A4005E0161 /* LICENSE */,
+				22A0B99D2CBF60A4005E0161 /* MMScanner.podspec */,
+				22A0B99C2CBF60A4005E0161 /* README.md */,
+				22FD25972CC1F611009C96FA /* Screenshot.jpg */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
 		8B7B121D1FC6C3C400011FE8 = {
 			isa = PBXGroup;
 			children = (
@@ -86,10 +97,13 @@
 			isa = PBXGroup;
 			children = (
 				8B7B12401FC6C3E300011FE8 /* MMScanner */,
+				22A0B99B2CBF6085005E0161 /* Pod */,
 				8B7B122C1FC6C3C500011FE8 /* AppDelegate.h */,
 				8B7B122D1FC6C3C500011FE8 /* AppDelegate.m */,
 				8B7B122F1FC6C3C500011FE8 /* ViewController.h */,
 				8B7B12301FC6C3C500011FE8 /* ViewController.m */,
+				22A0B9982CBF6071005E0161 /* UIImage+Color.h */,
+				22A0B9992CBF6071005E0161 /* UIImage+Color.m */,
 				8B7B124C1FC6C43B00011FE8 /* QRDetailViewController.h */,
 				8B7B124D1FC6C43B00011FE8 /* QRDetailViewController.m */,
 				FAC265BF21CA311900868D7A /* BarDetailViewController.h */,
@@ -115,7 +129,6 @@
 		8B7B12401FC6C3E300011FE8 /* MMScanner */ = {
 			isa = PBXGroup;
 			children = (
-				FAC265B621CA2B5B00868D7A /* Pod */,
 				8B7B12431FC6C3E300011FE8 /* MMScanner.bundle */,
 				8B7B12441FC6C3E300011FE8 /* MMScannerController.h */,
 				8B7B12451FC6C3E300011FE8 /* MMScannerController.m */,
@@ -126,17 +139,6 @@
 			);
 			name = MMScanner;
 			path = ../../MMScanner;
-			sourceTree = "<group>";
-		};
-		FAC265B621CA2B5B00868D7A /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				FAC265BA21CA2B6800868D7A /* MMScanner.podspec */,
-				FAC265B921CA2B6800868D7A /* README.md */,
-				FAC265B821CA2B6800868D7A /* LICENSE */,
-				FAC265B721CA2B6700868D7A /* Screenshot.gif */,
-			);
-			name = Pod;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,8 +172,7 @@
 				TargetAttributes = {
 					8B7B12251FC6C3C500011FE8 = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = GRSZLFFNPH;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -180,6 +181,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -199,13 +201,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B7B12491FC6C3E300011FE8 /* MMScanner.bundle in Resources */,
+				22FD25982CC1F611009C96FA /* Screenshot.jpg in Resources */,
 				8B7B12391FC6C3C500011FE8 /* LaunchScreen.storyboard in Resources */,
 				8B7B12361FC6C3C500011FE8 /* Assets.xcassets in Resources */,
-				FAC265BC21CA2B6800868D7A /* LICENSE in Resources */,
-				FAC265BE21CA2B6800868D7A /* MMScanner.podspec in Resources */,
 				8B7B12521FC6C45F00011FE8 /* logo.jpg in Resources */,
-				FAC265BB21CA2B6800868D7A /* Screenshot.gif in Resources */,
-				FAC265BD21CA2B6800868D7A /* README.md in Resources */,
 				8B7B12341FC6C3C500011FE8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,6 +222,7 @@
 				FAC265C121CA311900868D7A /* BarDetailViewController.m in Sources */,
 				8B7B122E1FC6C3C500011FE8 /* AppDelegate.m in Sources */,
 				8B7B124A1FC6C3E300011FE8 /* MMScannerController.m in Sources */,
+				22A0B99A2CBF6071005E0161 /* UIImage+Color.m in Sources */,
 				8B7B122B1FC6C3C500011FE8 /* main.m in Sources */,
 				8B7B124E1FC6C43B00011FE8 /* QRDetailViewController.m in Sources */,
 			);
@@ -344,11 +344,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = GRSZLFFNPH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MMScannerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lea.MMScannerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -356,11 +359,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = GRSZLFFNPH;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MMScannerDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lea.MMScannerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

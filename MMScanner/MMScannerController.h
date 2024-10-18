@@ -8,27 +8,28 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol MMScannerDelegate;
 @interface MMScannerController : UIViewController
 
-// 透明的区域[扫描区 | 默认：左边距40，上边距80]
-@property (nonatomic, assign) CGRect qrScanArea;
-// 动画间隔时间 [默认值:0.01]
-@property (nonatomic, assign) double qrScanLineAnimateDuration;
-// 四角颜色 [默认：白色]
-@property (nonatomic, strong) UIColor * qrScanLayerBorderColor;
-// 扫描线图片 [默认：使用bundle下的scan_line]
-@property (nonatomic, copy) NSString * qrScanLineImageName;
+// 代理
+@property (nonatomic, weak) id<MMScannerDelegate> delegate;
 // 是否支持条码 [默认显示：NO]
 @property (nonatomic, assign) BOOL supportBarcode;
-// 是否显示'手电筒'[默认显示：NO]
-@property (nonatomic, assign) BOOL showFlashlight;
-// 是否显示'图库'[默认显示：NO]
-@property (nonatomic, assign) BOOL showGalleryOption;
-// 扫描内容回传
-@property (nonatomic, copy) void (^completion)(NSString *scanConetent);
 
-//## 扫描控制
+// 扫描控制
 - (void)startScan;
 - (void)stopScan;
+
+@end
+
+@protocol MMScannerDelegate <NSObject>
+
+@optional
+// 扫描结果返回
+- (void)onScanResultCallback:(NSString *)scanContent;
+// 进入【我的二维码】
+- (void)onScanMineClickCallback;
+// 进入图库，并回传图片
+- (void)onScanAlbumClickCallback:(void (^)(UIImage *image))callback;
 
 @end

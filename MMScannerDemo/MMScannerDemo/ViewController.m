@@ -10,11 +10,14 @@
 #import "QRDetailViewController.h"
 #import "BarDetailViewController.h"
 #import "MMScannerController.h"
+#import <Photos/Photos.h>
 
-@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface ViewController () <UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,MMScannerDelegate>
 
-@property (nonatomic, strong) UITableView * tableView;
-@property (nonatomic, strong) MMScannerController * scanner;
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) MMScannerController *scanner;
+@property (nonatomic, copy) void (^onSelectImage)(UIImage *image);
+
 @end
 
 @implementation ViewController
@@ -22,7 +25,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"二维码";
+    self.title = @"DEMO";
     self.view.backgroundColor = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1.0];
     [self.view addSubview:self.tableView];
 }
@@ -77,35 +80,92 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row == 0)
-    {
-        __weak typeof(self) weakSelf = self;
-        _scanner = [[MMScannerController alloc] init];
-        _scanner.showGalleryOption = YES;
-        _scanner.showFlashlight = YES;
-        _scanner.supportBarcode = YES;
-        [_scanner setCompletion:^(NSString *scanConetent) {
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"扫描内容如下："
-                                                             message:scanConetent
-                                                            delegate:weakSelf
-                                                   cancelButtonTitle:@"确定"
-                                                   otherButtonTitles:nil, nil];
-            [alert show];
-        }];
+    if (indexPath.row == 0) {
+        if (!self.scanner) {
+            self.scanner = [[MMScannerController alloc] init];
+            self.scanner.supportBarcode = YES;
+            self.scanner.delegate = self;
+        }
         [self.navigationController pushViewController:_scanner animated:YES];
     } else if (indexPath.row == 1) {
-        QRDetailViewController * controller = [[QRDetailViewController alloc] init];
+        QRDetailViewController *controller = [[QRDetailViewController alloc] init];
         [self.navigationController pushViewController:controller animated:YES];
     } else {
-        BarDetailViewController * controller = [[BarDetailViewController alloc] init];
+        BarDetailViewController *controller = [[BarDetailViewController alloc] init];
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
 
-#pragma mark - UIAlertViewDelegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+#pragma mark - MMScannerDelegate
+- (void)onScanResultCallback:(NSString *)scanContent
 {
-    [_scanner startScan];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"扫描内容如下：" message:scanContent preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [self.scanner startScan];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)onScanMineClickCallback
+{
+    QRDetailViewController *controller = [[QRDetailViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)onScanAlbumClickCallback:(void (^)(UIImage *image))callback
+{
+    self.onSelectImage = callback;
+    [self galleryClicked];
+}
+
+#pragma mark - 图库选择
+- (void)galleryClicked
+{
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    if (status == AVAuthorizationStatusNotDetermined) { // 首次访问
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            if (status == PHAuthorizationStatusAuthorized)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.delegate = self;
+                    imagePicker.navigationBar.tintColor = [UIColor blackColor];
+                    [self presentViewController:imagePicker animated:YES completion:nil];
+                });
+            }
+        }];
+    } else {
+        if (status == AVAuthorizationStatusRestricted ||
+            status == AVAuthorizationStatusDenied) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在设置中开启相册权限" preferredStyle:UIAlertControllerStyleAlert];
+            [alert addAction:[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction *_Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }]];
+            [self presentViewController:alert animated:YES completion:nil];
+        } else {
+            UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            picker.delegate = self;
+            picker.navigationBar.translucent = NO;
+            picker.modalPresentationStyle = UIModalPresentationFullScreen;
+            if (@available(iOS 13.0, *)) {
+                [[UIScrollView appearance] setContentInsetAdjustmentBehavior:UIScrollViewContentInsetAdjustmentAutomatic];
+            }
+            [self.navigationController presentViewController:picker animated:YES completion:nil];
+        }
+    }
+}
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    !self.onSelectImage ?: self.onSelectImage([info objectForKey:UIImagePickerControllerOriginalImage]);
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark -

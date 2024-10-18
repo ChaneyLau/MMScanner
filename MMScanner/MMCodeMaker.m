@@ -15,18 +15,18 @@
 // 生成条形码
 + (UIImage *)barCodeImageWithContent:(NSString *)content size:(CGSize)imageSize
 {
-    NSData * data = [content dataUsingEncoding:NSASCIIStringEncoding];
-    CIFilter * filter = [CIFilter filterWithName:@"CICode128BarcodeGenerator"];
+    NSData *data = [content dataUsingEncoding:NSASCIIStringEncoding];
+    CIFilter *filter = [CIFilter filterWithName:@"CICode128BarcodeGenerator"];
     [filter setValue:data forKey:@"inputMessage"];
     // 边界
     [filter setValue:[NSNumber numberWithInteger:10] forKey:@"inputQuietSpace"];
     // 条形码图片
-    CIImage * outputImage = [filter outputImage];
+    CIImage *outputImage = [filter outputImage];
     // 指定比例
     CGFloat scaleX = imageSize.width / outputImage.extent.size.width;
     CGFloat scaleY = imageSize.height / outputImage.extent.size.height;
-    CIImage * scaleImage = [outputImage imageByApplyingTransform:CGAffineTransformScale(CGAffineTransformIdentity, scaleX, scaleY)];
-    UIImage * image = [UIImage imageWithCIImage:scaleImage];
+    CIImage *scaleImage = [outputImage imageByApplyingTransform:CGAffineTransformScale(CGAffineTransformIdentity, scaleX, scaleY)];
+    UIImage *image = [UIImage imageWithCIImage:scaleImage];
     return image;
 }
 
@@ -34,19 +34,19 @@
 + (UIImage *)qrImageWithContent:(NSString *)qrContent logoImage:(UIImage *)logoImage qrColor:(UIColor *)qrColor qrWidth:(CGFloat)qrWidth
 {
     // 通过滤镜生成二维码
-    CIFilter * filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    CIFilter *filter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
     [filter setDefaults];
-    NSData * data = [qrContent dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [qrContent dataUsingEncoding:NSUTF8StringEncoding];
     [filter setValue:data forKey:@"inputMessage"];
-    CIImage * image = [filter outputImage];
+    CIImage *image = [filter outputImage];
     // 改变生成的图片的大小
     CGRect extent = CGRectIntegral(image.extent);
     CGFloat scale = MIN(qrWidth/CGRectGetWidth(extent), qrWidth/CGRectGetHeight(extent));
-    size_t width = CGRectGetWidth(extent) * scale;
-    size_t height = CGRectGetHeight(extent) * scale;
+    size_t width = CGRectGetWidth(extent) *scale;
+    size_t height = CGRectGetHeight(extent) *scale;
     CGColorSpaceRef cs = CGColorSpaceCreateDeviceGray();
     CGContextRef bitmapRef = CGBitmapContextCreate(nil, width, height, 8, 0, cs, (CGBitmapInfo)kCGImageAlphaNone);
-    CIContext * context = [CIContext contextWithOptions:nil];
+    CIContext *context = [CIContext contextWithOptions:nil];
     CGImageRef bitmapImage = [context createCGImage:image fromRect:extent];
     CGContextSetInterpolationQuality(bitmapRef, kCGInterpolationNone);
     CGContextScaleCTM(bitmapRef, scale, scale);
@@ -55,7 +55,7 @@
     CGContextRelease(bitmapRef);
     CGImageRelease(bitmapImage);
     // 获取
-    UIImage * qrImage = [UIImage imageWithCGImage:scaledImage];
+    UIImage *qrImage = [UIImage imageWithCGImage:scaledImage];
     // 设置颜色
     if (qrColor) {
         CGFloat red = 0.0;
@@ -75,10 +75,7 @@
 + (void)qrImageWithContent:(NSString *)qrContent logoImage:(UIImage *)logoImage qrColor:(UIColor *)qrColor qrWidth:(CGFloat)qrWidth completion:(void (^)(UIImage *image))completion
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        UIImage * image = [self qrImageWithContent:qrContent
-                                         logoImage:logoImage
-                                           qrColor:qrColor
-                                           qrWidth:qrWidth];
+        UIImage *image = [self qrImageWithContent:qrContent logoImage:logoImage qrColor:qrColor qrWidth:qrWidth];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion) completion(image);
         });
@@ -104,7 +101,7 @@
         CGContextDrawImage(context, logoRect, logoImage.CGImage);
     } CGContextRestoreGState(context);
     // 获取合成后的图片
-    UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
@@ -119,10 +116,10 @@
     CGRect outerRect = CGRectInset(fillRect, fillOrigin, fillOrigin);
     CGRect innerRect = CGRectInset(outerRect, logoOrigin, logoOrigin);
     // bezierPath
-    UIBezierPath * fillPath = [UIBezierPath bezierPathWithRoundedRect:fillRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(radius, radius)];
-    UIBezierPath * outerPath = [UIBezierPath bezierPathWithRoundedRect:outerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(outerRect.size.width/5.0, outerRect.size.width/5.0)];
+    UIBezierPath *fillPath = [UIBezierPath bezierPathWithRoundedRect:fillRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(radius, radius)];
+    UIBezierPath *outerPath = [UIBezierPath bezierPathWithRoundedRect:outerRect byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(outerRect.size.width/5.0, outerRect.size.width/5.0)];
     // 绘制
-    UIColor * fillColor = [UIColor whiteColor];
+    UIColor *fillColor = [UIColor whiteColor];
     UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);{
@@ -140,7 +137,7 @@
         CGContextStrokePath(context);
     } CGContextRestoreGState(context);
     // 获取图片
-    UIImage * radiusImage  = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *radiusImage  = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return radiusImage;
 }
@@ -151,31 +148,31 @@
     const int imageWidth = qrImage.size.width;
     const int imageHeight = qrImage.size.height;
     
-    size_t bytesPerRow = imageWidth * 4;
-    uint32_t *rgbImageBuf = (uint32_t*)malloc(bytesPerRow * imageHeight);
+    size_t bytesPerRow = imageWidth *4;
+    uint32_t *rgbImageBuf = (uint32_t*)malloc(bytesPerRow *imageHeight);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(rgbImageBuf, imageWidth, imageHeight, 8, bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast);
     CGContextDrawImage(context, CGRectMake(0, 0, imageWidth, imageHeight), qrImage.CGImage);
     // 遍历像素
-    int pixelNum = imageWidth * imageHeight;
-    uint32_t* pCurPtr = rgbImageBuf;
+    int pixelNum = imageWidth *imageHeight;
+    uint32_t*pCurPtr = rgbImageBuf;
     for (int i = 0; i < pixelNum; i++, pCurPtr++)
     {
         // 改变二维码颜色
         if ((*pCurPtr & 0xFFFFFF00) < 0x99999900) {
-            uint8_t* ptr = (uint8_t*)pCurPtr;
+            uint8_t*ptr = (uint8_t*)pCurPtr;
             ptr[3] = red*255.0;
             ptr[2] = green*255.0;
             ptr[1] = blue*255.0;
         }
     }
     // 输出图片
-    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rgbImageBuf, bytesPerRow * imageHeight, ProviderReleaseData);
+    CGDataProviderRef dataProvider = CGDataProviderCreateWithData(NULL, rgbImageBuf, bytesPerRow *imageHeight, ProviderReleaseData);
     CGImageRef imageRef = CGImageCreate(imageWidth, imageHeight, 8, 32, bytesPerRow, colorSpace,
                                         kCGImageAlphaLast | kCGBitmapByteOrder32Little, dataProvider,
                                         NULL, true, kCGRenderingIntentDefault);
     CGDataProviderRelease(dataProvider);
-    UIImage * resultUIImage = [UIImage imageWithCGImage:imageRef];
+    UIImage *resultUIImage = [UIImage imageWithCGImage:imageRef];
     // 清理空间
     CGImageRelease(imageRef);
     CGContextRelease(context);
