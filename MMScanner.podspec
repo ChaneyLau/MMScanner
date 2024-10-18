@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/ChaneyLau/MMScanner"
   s.license          = 'MIT'
   s.author           = { "ChaneyLau" => "1625977078@qq.com" }
-  s.source           = { :git => "https://github.com/CheeryLau/MMScanner.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/ChaneyLau/MMScanner.git", :tag => s.version.to_s }
   s.platform         = :ios, '8.0'
   s.requires_arc     = true
   s.source_files     = 'MMScanner/**/*.{h,m}'
